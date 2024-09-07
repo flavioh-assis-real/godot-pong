@@ -2,27 +2,31 @@ using Godot;
 
 public partial class Ball : CharacterBody2D
 {
-    [Export]
-    int Speed = 200;
-    Vector2 direction;
+    int Speed = 300;
+    private bool IsBallMovingTowardsAI = false;
+    Vector2 Direction;
 
     public override void _Ready()
     {
-        this.direction = new Vector2(0, 0);
+        this.Direction = new Vector2(0, 0);
     }
 
     public override void _PhysicsProcess(double delta)
     {
-        var collision = MoveAndCollide(this.direction * (float)delta);
+        var initialGlobalPositionX = this.GlobalPosition.X;
+
+        var collision = MoveAndCollide(this.Direction * (float)delta);
+
+        this.IsBallMovingTowardsAI = CheckBallDirecion(initialGlobalPositionX);
 
         if (collision is null) return;
 
         this.ChangeDirection(collision);
     }
 
-    private static bool IsCollidingInGroup(KinematicCollision2D collision, string group)
+    public void Start()
     {
-        return ((Node)collision.GetCollider()).IsInGroup(group);
+        this.Direction = GetInitialDirection();
     }
 
     private Vector2 GetInitialDirection()
@@ -38,25 +42,32 @@ public partial class Ball : CharacterBody2D
         return GD.RandRange(0, 1) == 0 ? -1 : 1;
     }
 
-    private void ChangeDirection(KinematicCollision2D collision)
+    private bool CheckBallDirecion(float initialGlobalPositionX)
     {
-        var isTouchingPlayer = IsCollidingInGroup(collision, "player");
-        var isTouchingWall = IsCollidingInGroup(collision, "walls");
-
-        if (isTouchingPlayer)
-        {
-            if (collision.GetNormal().Y == 1 || collision.GetNormal().Y == -1)
-                this.direction.Y *= -1 * 1.50f;
-            else
-                this.direction.X *= -1 * 1.50f;
-
-        }
-        if (isTouchingWall)
-            this.direction.Y *= -1;
+        return this.GlobalPosition.X > initialGlobalPositionX;
     }
 
-    public void Start()
+    private void ChangeDirection(KinematicCollision2D collision)
     {
-        this.direction = GetInitialDirection();
+        if (IsCollidingWithGroup(collision, "player"))
+        {
+            if (IsCollidingOnTopOrBottom(collision))
+                this.Direction.Y *= -1 * 10f;
+            else
+                this.Direction.X *= -1 * 1.10f;
+
+        }
+        if (IsCollidingWithGroup(collision, "wall"))
+            this.Direction.Y *= -1;
+    }
+
+    private static bool IsCollidingWithGroup(KinematicCollision2D collision, string group)
+    {
+        return ((Node)collision.GetCollider()).IsInGroup(group);
+    }
+
+    private static bool IsCollidingOnTopOrBottom(KinematicCollision2D collision)
+    {
+        return collision.GetNormal().Y == 1 || collision.GetNormal().Y == -1;
     }
 }
