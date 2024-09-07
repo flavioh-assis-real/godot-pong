@@ -8,3 +8,6 @@ dotnet_diagnostic.IDE0003.severity = none
 
 # CA1050: Declare types in namespaces
 dotnet_diagnostic.CA1050.severity = none
+
+# IDE1006: Naming Styles
+dotnet_diagnostic.IDE1006.severity = none
