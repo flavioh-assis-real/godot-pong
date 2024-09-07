@@ -1,8 +1,71 @@
-[gd_scene load_steps=2 format=3 uid="uid://dosv1m4yobqa7"]
+[gd_scene load_steps=6 format=3 uid="uid://dosv1m4yobqa7"]
 
 [ext_resource type="PackedScene" uid="uid://d0fd5b0smmvfh" path="res://player/player.tscn" id="1_rvupy"]
+[ext_resource type="Script" path="res://Game.cs" id="1_wvxy0"]
+[ext_resource type="PackedScene" uid="uid://x28r54vl5o7o" path="res://world/wall.tscn" id="2_n8vst"]
+[ext_resource type="PackedScene" uid="uid://d2bkemb2lqn0w" path="res://world/ball.tscn" id="3_cuifo"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_6xass"]
+font_size = 72
 
 [node name="Game" type="Node2D"]
+script = ExtResource("1_wvxy0")
 
 [node name="Player" parent="." instance=ExtResource("1_rvupy")]
 position = Vector2(100, 250)
+
+[node name="Player2" parent="." instance=ExtResource("1_rvupy")]
+position = Vector2(1166, 250)
+IdPlayer = 2
+
+[node name="Wall" parent="." instance=ExtResource("2_n8vst")]
+position = Vector2(0, -10)
+
+[node name="Wall2" parent="." instance=ExtResource("2_n8vst")]
+position = Vector2(0, 730)
+
+[node name="Ball" parent="." instance=ExtResource("3_cuifo")]
+position = Vector2(643, 54)
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="Ball"]
+position = Vector2(0, 3.57628e-06)
+scale = Vector2(2, 2)
+
+[node name="UI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="VBoxContainer" type="HBoxContainer" parent="UI"]
+layout_mode = 1
+offset_right = 1283.0
+offset_bottom = 50.0
+theme_override_constants/separation = 150
+alignment = 1
+
+[node name="LabelPlayer1" type="Label" parent="UI/VBoxContainer"]
+layout_mode = 2
+text = "0"
+label_settings = SubResource("LabelSettings_6xass")
+
+[node name="LabelPlayer2" type="Label" parent="UI/VBoxContainer"]
+layout_mode = 2
+text = "0"
+label_settings = SubResource("LabelSettings_6xass")
+
+[node name="Button" type="Button" parent="UI"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 14.25
+anchor_top = 12.9
+anchor_right = 18.75
+anchor_bottom = 13.675
+offset_left = -6.10352e-05
+grow_horizontal = 2
+grow_vertical = 2
+text = "PLAY
+"
+
+[connection signal="screen_exited" from="Ball/VisibleOnScreenNotifier2D" to="." method="_OnVisibleOnScreenNotifier2dScreenExited"]
+[connection signal="pressed" from="UI/Button" to="." method="_OnButtonPressed"]
