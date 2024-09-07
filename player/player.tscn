@@ -6,12 +6,22 @@
 size = Vector2(40, 234)
 
 [node name="Player" type="CharacterBody2D" groups=["player"]]
+position = Vector2(-0.07, -0.166)
 script = ExtResource("1_y53oa")
 
 [node name="ColorRect" type="ColorRect" parent="."]
-offset_right = 40.0
-offset_bottom = 234.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -117.0
+offset_right = 20.0
+offset_bottom = 117.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.121569, 0.133333, 1, 1)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(20, 117)
 shape = SubResource("RectangleShape2D_4i5fb")
